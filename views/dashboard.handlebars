@@ -1,0 +1,25 @@
+<div class="row">
+  <div class="text-center">
+    <h2>Welcome, {{username}}!</h2>
+  </div>
+</div>
+
+<div class="row mt-4">
+  <div class="text-center blog-list">
+    <div class="form-group">
+      <a class="btn btn-primary" href="/newPost">Create a new post</a>
+    </div>
+    <h3>Current Posts:</h3>
+    {{#if blogs.length}}
+      {{#each blogs as |blog|}}
+        <div class="row mb-2">
+          <div class="text-center">
+            <h4><a href="/blog/{{blog.id}}">{{blog.title}}</a></h4>
+          </div>
+        </div>
+      {{/each}}
+    {{else}}
+      <p>You currently don't have any posts.</p>
+    {{/if}}
+  </div>
+</div>
