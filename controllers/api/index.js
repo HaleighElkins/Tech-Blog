@@ -12,5 +12,3 @@ router
 
 module.exports = router;
 
-
-

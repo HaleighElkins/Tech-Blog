@@ -11,6 +11,11 @@ const setSession = (req, user) => {
     req.session.logged_in = true;
   };
   
+// Handle root URL
+router.get('/', (req, res) => {
+  res.send('Welcome to the home page!');
+});
+
   router.post('/', async (req, res) => {
     try {
       const userData = await User.create(req.body);
