@@ -3,10 +3,6 @@ const bcrypt = require('bcrypt');
 const sequelize = require('../config/connection');
 
 class User extends Model {
-  async hashPassword(password) {
-    return await bcrypt.hash(password, 10);
-  }
-
   async checkPassword(loginPw) {
     return await bcrypt.compare(loginPw, this.password);
   }
@@ -40,20 +36,19 @@ User.init({
   },
 }, {
   hooks: {
-    async beforeCreate(userData) {
-      userData.password = await User.hashPassword(userData.password);
-      return userData;
-    },
-    async beforeUpdate(userData) {
-      userData.password = await User.hashPassword(userData.password);
-      return userData;
-    },
+    // Moved the beforeCreate hook outside of the class definition
   },
   sequelize,
   timestamps: false,
   freezeTableName: true,
   underscored: true,
   modelName: 'user',
+});
+
+// Define the beforeCreate hook outside of the class
+User.beforeCreate(async (userData) => {
+  userData.password = await bcrypt.hash(userData.password, 10);
+  return userData;
 });
 
 module.exports = User;
