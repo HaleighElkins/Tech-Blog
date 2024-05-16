@@ -12,7 +12,7 @@ router.get('/signup', (req, res) => {
   res.render('signup');
 });
 
-
+// middleware
 router.get('/newPost', withAuth, (req, res) => {
   res.render('newPost', { logged_in: req.session.logged_in });
 });
@@ -37,7 +37,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-
+// Middleware
 router.get('/dashboard', withAuth, async (req, res) => {
   try {
     const userData = await User.findByPk(req.session.user_id, {
@@ -84,6 +84,7 @@ router.get('/blog/:id', async (req, res) => {
   }
 });
 
+// middleware
 router.get('/blogEdit/:id', withAuth, async (req, res) => {
   try {
     const blogData = await Blog.findByPk(req.params.id, {
