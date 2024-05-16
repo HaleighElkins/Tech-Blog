@@ -13,7 +13,7 @@ const setSession = (req, user) => {
   
 // Handle root URL
 router.get('/', (req, res) => {
-  res.send('Welcome to the home page!');
+  // res.send('Welcome to the home page!');
 });
 
   router.post('/', async (req, res) => {
@@ -48,3 +48,5 @@ router.get('/', (req, res) => {
   });
   
   module.exports = router;
+
+
