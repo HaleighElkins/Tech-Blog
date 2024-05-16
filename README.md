@@ -13,6 +13,13 @@ This can be a great starting off point for how to write your own MVC type web bl
 
 ## Visuals
 
+![Screenshot 2024-05-15 203812](https://github.com/HaleighElkins/Tech-Blog/assets/152942336/3bd9aac3-63fe-4bb3-b0f2-bb52056dc0bc)
+
+![Screenshot 2024-05-15 204020](https://github.com/HaleighElkins/Tech-Blog/assets/152942336/4de3e709-2c45-4663-911a-1eb4bddf835f)
+
+![Screenshot 2024-05-15 204044](https://github.com/HaleighElkins/Tech-Blog/assets/152942336/8e586f1d-89b8-436e-9deb-4e9784c3c638)
+
+![Screenshot 2024-05-15 204057](https://github.com/HaleighElkins/Tech-Blog/assets/152942336/e6702146-9168-4779-ac44-b50558537fbd)
 
 
 
