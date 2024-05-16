@@ -1,52 +1,107 @@
-const express = require('express');
-const router = express.Router();
-const { User } = require('../models');
+const router = require('express').Router();
+const { Blog, User, Comment } = require('../models');
+const withAuth = require('../utils/auth');
 
-// Middleware for errors
-const handleErrors = (res, status, message) => res.status(status).json({ message });
 
-// Middleware for setting session properties
-const setSession = (req, user) => {
-    req.session.user_id = user.id;
-    req.session.logged_in = true;
-  };
-  
-// Handle root URL
-router.get('/', (req, res) => {
-  // res.send('Welcome to the home page!');
+
+router.get('/login', (req, res) => {
+  res.render('login');
 });
 
-  router.post('/', async (req, res) => {
-    try {
-      const userData = await User.create(req.body);
-      setSession(req, userData);
-      res.status(200).json(userData);
-    } catch (err) {
-      handleErrors(res, 400, err.message);
-    }
-  });
-  
-  router.post('/login', async (req, res) => {
-    try {
-      const userData = await User.findOne({ where: { email: req.body.email } });
-      if (!userData || !(await userData.checkPassword(req.body.password))) {
-        handleErrors(res, 400, 'Incorrect email or password, please try again');
-        return;
-      }
-      setSession(req, userData);
-      res.json({ user: userData, message: 'You are now logged in!' });
-    } catch (err) {
-      handleErrors(res, 400, err.message);
-    }
-  });
-  
-  router.post('/logout', (req, res) => {
-    if (!req.session.logged_in) {
-      return res.status(404).end();
-    }
-    req.session.destroy(() => res.status(204).end());
-  });
-  
-  module.exports = router;
+router.get('/signup', (req, res) => {
+  res.render('signup');
+});
 
 
+router.get('/newPost', withAuth, (req, res) => {
+  res.render('newPost', { logged_in: req.session.logged_in });
+});
+
+router.get('/', async (req, res) => {
+  try {
+    const blogData = await Blog.findAll({
+      include: [
+        {
+          model: User,
+          attributes: ['username'],
+        },
+      ],
+    });
+    const blogs = blogData.map((blog) => blog.get({ plain: true }));
+    res.render('homepage', {
+      blogs,
+      logged_in: req.session.logged_in,
+    });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+
+router.get('/dashboard', withAuth, async (req, res) => {
+  try {
+    const userData = await User.findByPk(req.session.user_id, {
+      attributes: { exclude: ['password'] },
+      include: [{ model: Blog }],
+    });
+    const user = userData.get({ plain: true });
+    res.render('dashboard', {
+      ...user,
+      logged_in: true,
+    });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+router.get('/blog/:id', async (req, res) => {
+  try {
+    const blogData = await Blog.findByPk(req.params.id, {
+      include: [
+        {
+          model: User,
+          attributes: ['username'],
+        },
+        {
+          model: Comment,
+          attributes: ['content', 'user_id', 'blog_id', 'date_created'],
+          include: {
+            model: User,
+            attributes: ['username'],
+          },
+        },
+      ],
+    });
+    const blog = blogData.get({ plain: true });
+    const isCreator = (blog.user_id === req.session.user_id);
+    res.render('blog', {
+      ...blog,
+      logged_in: req.session.logged_in,
+      isCreator
+    });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+router.get('/blogEdit/:id', withAuth, async (req, res) => {
+  try {
+    const blogData = await Blog.findByPk(req.params.id, {
+      include: [
+        {
+          model: User,
+          attributes: ['username'],
+        },
+      ],
+    });
+    const blog = blogData.get({ plain: true });
+    res.render('blogEdit', {
+      ...blog,
+      logged_in: req.session.logged_in,
+    });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+module.exports = router;

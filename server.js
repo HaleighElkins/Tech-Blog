@@ -28,16 +28,17 @@ const sessionConfig = {
     db: sequelize
   })
 };
-app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(session(sess));
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(session(sessionConfig));
 
 app.engine('handlebars', hbs.engine);
 app.set('view engine', 'handlebars');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'public')));
+
+
 
 // app.use('/api/blogs', blogRoutes); 
 
@@ -50,18 +51,6 @@ sequelize.sync({ force: false })
   .catch(err => {
     console.error('Error starting server:', err);
   });
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
