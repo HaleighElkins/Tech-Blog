@@ -36,7 +36,15 @@ app.set('view engine', 'handlebars');
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use(routes);
+try {
+  app.use(routes);
+} catch (err) {
+  app.use((req,res)=>{
+    console.error(err);
+    res.status(500).json({message:"Something went wrong"})
+  }) 
+  
+}
 
 sequelize.sync({ force: false })
   .then(() => {

@@ -1,5 +1,6 @@
 # Tech-Blog
-Live URL: 
+Live URL: https://tech-blog-ak14.onrender.com/
+
 
 
 ## Description
